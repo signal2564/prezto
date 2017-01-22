@@ -1,0 +1,43 @@
+#
+# A custom theme
+#
+
+SR="\ue0b0"
+
+function pseg {
+   bg="%K{$1}"
+   fg="%F{$2}"
+
+   print -n "%{$bg$fg%}$SR%f%k"
+}
+
+function prompt_custom_precmd {
+   git-info
+}
+
+function prompt_custom_setup {
+   setopt LOCAL_OPTIONS
+   unsetopt XTRACE KSH_ARRAYS
+   prompt_opts=(cr percent subst)
+
+   # Load required functions.
+   autoload -Uz add-zsh-hook
+
+   # Add hook for calling git-info before each command.
+   add-zsh-hook precmd prompt_custom_precmd
+
+   # Set git-info parameters.
+   zstyle ':prezto:module:git:info' verbose 'yes'
+   zstyle ':prezto:module:git:info:branch' format ' %F{0}%b%f'
+   zstyle ':prezto:module:git:info:clean' format ' '
+   zstyle ':prezto:module:git:info:dirty' format '⚡ '
+   zstyle ':prezto:module:git:info:keys' format \
+     'prompt' '$(coalesce "%b" "%p" "%c")${git_info[rprompt]}%s' \
+     'rprompt' '%C%D'
+
+   # Define prompts.
+   PROMPT='%(!.#.$) %n $(pseg 2 0)%K{2}%F{0} %1~ %f%k$(pseg 4 2)%K{4}${(e)git_info[prompt]}%k$(pseg 0 4) '
+   RPROMPT=''
+}
+
+prompt_custom_setup "$@"
