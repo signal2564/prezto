@@ -11,6 +11,14 @@ function pseg {
    print -n "%{$bg$fg%}$SR%f%k"
 }
 
+function gseg {
+   if [[ -n $1 ]]; then
+      print -n "${(e)git_info[prompt]}"
+   else
+      print -n "$(pseg 0 2)"
+   fi
+}
+
 function prompt_custom_precmd {
    git-info
 }
@@ -29,14 +37,14 @@ function prompt_custom_setup {
    # Set git-info parameters.
    zstyle ':prezto:module:git:info' verbose 'yes'
    zstyle ':prezto:module:git:info:branch' format ' %F{0}%b%f'
-   zstyle ':prezto:module:git:info:clean' format ' '
+   zstyle ':prezto:module:git:info:clean' format '  '
    zstyle ':prezto:module:git:info:dirty' format '⚡ '
    zstyle ':prezto:module:git:info:keys' format \
-     'prompt' '$(coalesce "%b" "%p" "%c")${git_info[rprompt]}%s' \
+     'prompt' '$(pseg 4 2)%K{4}$(coalesce "%b" "%p" "%c")${git_info[rprompt]}%s%k$(pseg 0 4)' \
      'rprompt' '%C%D'
 
    # Define prompts.
-   PROMPT='%(!.#.$) %n $(pseg 2 0)%K{2}%F{0} %1~ %f%k$(pseg 4 2)%K{4}${(e)git_info[prompt]}%k$(pseg 0 4) '
+   PROMPT='%(!.#.$) %n $(pseg 2 0)%K{2}%F{0} %1~ %f%k$(gseg ${git_info[rprompt]}) '
    RPROMPT=''
 }
 
