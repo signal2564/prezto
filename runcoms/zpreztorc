@@ -26,6 +26,7 @@ zstyle ':prezto:*:*' color 'yes'
 
 # Fix after macOs update
 zstyle ':prezto:module:utility:ls' dirs-first 'no'
+zstyle ':prezto:module:utility:ls' color 'no'
 
 # Set the Prezto modules to load (browse modules).
 # The order matters.
